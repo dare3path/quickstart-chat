@@ -20,7 +20,13 @@ fn main() {
 
     // Set the Ctrl+C handler.
     ctrlc::set_handler(move || {
-        println!("Received Ctrl+C! Please use Ctrl+D to exiting gracefully.");
+        // For Windows: "Ctrl+Z", and for non-Windows (Unix-like): "Ctrl+D"
+        let end_key = if cfg!(windows) {
+            "Ctrl+Z"
+        } else {
+            "Ctrl+D"
+        };
+        println!("Received Ctrl+C! Please use {} to exit gracefully.", end_key);
         //r.store(false, Ordering::SeqCst);
         RUNNING.store(false, Ordering::SeqCst);
     })

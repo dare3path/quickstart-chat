@@ -253,7 +253,10 @@ fn user_input_loop(ctx: &DbConnection) {
         let Ok(line) = line else {
             panic!("Failed to read from stdin.");
         };
-        if let Some(name) = line.strip_prefix("/name ") {
+        if let Some(quitmsg) = line.strip_prefix("/quit") {
+            ctx.reducers.send_message(format!("QUIT: {}",quitmsg)).unwrap();
+            break;
+        } else if let Some(name) = line.strip_prefix("/name ") {
             ctx.reducers.set_name(name.to_string()).unwrap();
         } else {
             ctx.reducers.send_message(line).unwrap();

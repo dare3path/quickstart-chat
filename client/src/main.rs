@@ -14,6 +14,7 @@ use std::sync::{
 static RUNNING: AtomicBool = AtomicBool::new(true);
 
 fn main() {
+    //log::info!("hi"); //not a thing
     // Create an atomic flag that can be safely shared among threads.
     //let running = Arc::new(AtomicBool::new(true));
     //let r = running.clone();

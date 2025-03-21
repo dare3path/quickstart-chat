@@ -65,7 +65,7 @@ pub fn client_connected(ctx: &ReducerContext) {
     if let Some(user) = ctx.db.user().identity().find(ctx.sender) {
         // If this is a returning user, i.e. we already have a `User` with this `Identity`,
         // set `online: true`, but leave `name` and `identity` unchanged.
-        log::info!("Updating existing user({})'s online status to true", ctx.sender);
+        log::info!("Updating existing user({:?})'s online status to true", ctx.sender);
         ctx.db.user().identity().update(User { online: true, ..user });
     } else {
         // If this is a new user, create a `User` row for the `Identity`,
@@ -83,12 +83,12 @@ pub fn client_connected(ctx: &ReducerContext) {
 // Called when a client disconnects from SpacetimeDB
 pub fn identity_disconnected(ctx: &ReducerContext) {
     if let Some(user) = ctx.db.user().identity().find(ctx.sender) {
-        log::info!("Updating existing user({})'s online status to false", ctx.sender);
+        log::info!("Updating existing user({:?})'s online status to false", ctx.sender);
         ctx.db.user().identity().update(User { online: false, ..user });
     } else {
         // This branch should be unreachable,
         // as it doesn't make sense for a client to disconnect without connecting first.
-        log::warn!("Disconnect event for unknown user with identity {:?}", ctx.sender);
+        log::error!("Disconnect event for unknown user with identity {:?}", ctx.sender);
     }
 }
 

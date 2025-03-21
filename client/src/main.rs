@@ -26,7 +26,7 @@ fn main() {
         } else {
             "Ctrl+D"
         };
-        println!("Received Ctrl+C! Please use {} to exit gracefully.", end_key);
+        println!("Received Ctrl+C(or SIGINT, or SIGTERM, or SIGHUP)! Please use {} to exit gracefully, or press Enter to sense this and exit.", end_key);
         //r.store(false, Ordering::SeqCst);
         RUNNING.store(false, Ordering::SeqCst);
     })
@@ -108,7 +108,7 @@ fn on_connect_error(_ctx: &ErrorContext, err: Error) {
 /// Our `on_disconnect` callback: print a note, then exit the process.
 fn on_disconnected(_ctx: &ErrorContext, err: Option<Error>) {
     if let Some(err) = err {
-        eprintln!("Disconnected: {}", err);
+        eprintln!("Disconnected with error: {}", err);
         std::process::exit(1);
     } else {
         println!("Disconnected.");
@@ -245,6 +245,11 @@ fn on_sub_error(_ctx: &ErrorContext, err: Error) {
 /// Read each line of standard input, and either set our name or send a message as appropriate.
 fn user_input_loop(ctx: &DbConnection) {
     for line in std::io::stdin().lines() {
+        if !RUNNING.load(Ordering::SeqCst) {
+            println!("Exiting loop gracefully.");
+            break;
+        }
+
         let Ok(line) = line else {
             panic!("Failed to read from stdin.");
         };

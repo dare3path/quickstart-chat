@@ -82,7 +82,76 @@ fn connect_to_db() -> DbConnection {
         .with_uri(HOST)
         // Finalize configuration and connect!
         .build()
-        .expect("Failed to connect")
+        //.expect("Failed to connect")
+        .unwrap_or_else(|error| {
+            use std::error::Error;
+            let mut body_bytes: Option<Vec<u8>> = None;
+            let mut charset: Option<String> = None;
+
+            let mut current_error: &dyn Error = &error;
+            while let Some(source) = current_error.source() {
+                let debug_str = format!("{:#?}", source);
+                if debug_str.contains("Http") && debug_str.contains("Response") {
+                    // Extract charset from headers
+                    if let Some(header_start) = debug_str.find("\"content-type\": \"") {
+                        let header_section = &debug_str[header_start + 17..];
+                        if let Some(header_end) = header_section.find('"') {
+                            let content_type = &header_section[..header_end];
+                            //eprintln!("!!!!content_type={:?}!!!!", content_type);
+                            if let Some(charset_start) = content_type.find("charset=") {
+                                let charset_value = &content_type[charset_start + 8..];
+                                charset = Some(charset_value.to_lowercase());
+                                //eprintln!("!!!!{:?}!!!!", charset);
+                            }
+                        }
+                    }
+
+                    // Extract body bytes
+                    if let Some(body_start) = debug_str.find("body: Some(") {
+                        let body_section = &debug_str[body_start + 11..];
+                        if let Some(body_end) = body_section.find("]") {
+                            let body_array = &body_section[..body_end];
+                            let cleaned_array = body_array
+                                .trim_start_matches(|c: char| c.is_whitespace() || c == '[')
+                                .trim_end_matches(|c: char| c.is_whitespace() || c == ',');
+                            let bytes: Vec<u8> = cleaned_array
+                                .split(',')
+                                .map(|s| s.trim())
+                                .filter(|s| !s.is_empty())
+                                .filter_map(|s| s.parse::<u8>().ok())
+                                .collect();
+                            body_bytes = Some(bytes);
+                            break;
+                        }
+                    }
+                }
+                current_error = source;
+            }
+
+            if let Some(bytes) = body_bytes {
+                // Check charset and decode accordingly
+                match charset.as_deref() {
+                    Some("utf-8" | "utf8") => {
+                        match String::from_utf8(bytes) {
+                            Ok(body_str) => {
+                                panic!("Failed to connect:\n{:?}\nWith decoded body (UTF-8): {}", error, body_str);
+                            }
+                            Err(from_utf8_error) => {
+                                panic!("Failed to connect:\n{:#?}\nFailed to decode body as UTF-8: {}", error, from_utf8_error);
+                            }
+                        }
+                    }
+                    Some(other_charset) => {
+                        panic!("Failed to connect:\n{:#?}\nUnsupported charset: {}", error, other_charset);
+                    }
+                    None => {
+                        panic!("Failed to connect:\n{:#?}\nNo charset found, assuming UTF-8 failed: {:?}", error, String::from_utf8(bytes));
+                    }
+                }
+            } else {
+                panic!("Failed to connect: {:#?}", error);
+            }
+        })
 }
 
 // ### Save credentials

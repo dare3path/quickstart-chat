@@ -128,6 +128,7 @@ fn connect_to_db() -> DbConnection {
                 current_error = source;
             }
 
+            eprintln!("If you're getting 'TokenError(Error(InvalidSignature))' it's probably because you're using a new server in /tmp maybe via './run_standalone_temp.sh', thus old credentials for this db won't work, so delete '~/.spacetimedb_client_credentials/db-name-here' so that new creds can be generated on first ever client connect.");
             if let Some(bytes) = body_bytes {
                 // Check charset and decode accordingly
                 match charset.as_deref() {
@@ -145,7 +146,7 @@ fn connect_to_db() -> DbConnection {
                         panic!("Failed to connect:\n{:#?}\nUnsupported charset: {}", error, other_charset);
                     }
                     None => {
-                        panic!("Failed to connect:\n{:#?}\nNo charset found, assuming UTF-8 failed: {:?}", error, String::from_utf8(bytes));
+                        panic!("Failed to connect:\n{:#?}\nNo charset found, thus now assuming UTF-8 body: {:?}", error, String::from_utf8(bytes));
                     }
                 }
             } else {

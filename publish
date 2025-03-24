@@ -1,4 +1,9 @@
 #!/usr/bin/bash
 
+#logout then login again, in case we're using ./run_standalone_temp.sh as the server, which means, we can't use the prev. server's creds on the new server! aka 'TokenError(Error(InvalidSignature))'
+spacetime logout
+set -e
+spacetime login --server-issued-login 127.0.0.1:3000
 
 spacetime publish --project-path server quickstart-chat
+echo "all good."

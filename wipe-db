@@ -1,6 +1,16 @@
 #!/usr/bin/bash
 
-set -xe
+set +x
+set +e
 autoslocalscripts="autoslocalscripts"
-spacetime delete --server $autoslocalscripts quickstart-chat --cert ../../CA/ca.crt
-echo "done."
+spacetime delete --server $autoslocalscripts quickstart-chat --cert ../../CA/ca.crt; ec="$?"
+if test "$ec" -ne 0; then
+  echo "If you got 500 error, and server logs say 'internal error: Permission denied:'...'does not own database', then you'll probably want to remove the whole database dir(this is all for tests after all):"
+  echo "stop server ie. Ctrl+C"
+  echo "cd ~/.local/share/spacetime"
+  echo "mv data data.prev01"
+  echo "start server again: spacetime start ..."
+else
+  echo "ok."
+fi
+exit "$ec"

@@ -1,5 +1,6 @@
 #!/usr/bin/bash
 
+autoslocalscripts="autoslocalscripts"
 set -xe
-spacetime logs --follow quickstart-chat --cert ../../CA/ca.crt
+spacetime logs -s autoslocalscripts --follow quickstart-chat --cert ../../CA/ca.crt
 echo "done"

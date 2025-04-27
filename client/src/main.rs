@@ -48,17 +48,18 @@ fn main() {
     // Handle CLI input
     user_input_loop(&ctx);
     let res=ctx.disconnect();
-    println!("disconnect result: {:?}", res);//always instantly Ok(());
-    println!("Awaiting for disconnect to succeed, timeout 3 seconds...");
-    let duration = std::time::Duration::from_secs(3);
+    println!("disconnect result: {:?}", res);//always instantly Ok(()); unless it was called already
+    //println!("Awaiting for disconnect to succeed, timeout 3 seconds...");
+    const TIMEOUT:u64=3;
+    let duration = std::time::Duration::from_secs(TIMEOUT);
     std::thread::sleep(duration);
-    println!("Failed to disconnect from the database!");
+    println!("Failed to disconnect from the database! Waited {} seconds.", TIMEOUT);
 }
 
 // ## Connect to the database
 
 /// The URI of the SpacetimeDB instance hosting our chat module.
-const HOST: &str = "http://localhost:3000";
+const HOST: &str = "https://127.1.2.3:6543";
 
 /// The module name we chose when we published our module.
 const DB_NAME: &str = "quickstart-chat";
@@ -80,6 +81,8 @@ fn connect_to_db() -> DbConnection {
         .with_module_name(DB_NAME)
         // Set the URI of the SpacetimeDB host that's running our database.
         .with_uri(HOST)
+        // The local CA pub cert, or server's pub key, in PEM format, to can trust the server!
+        .with_trusted_cert(Some("../../../CA/ca.crt"))
         // Finalize configuration and connect!
         .build()
         //.expect("Failed to connect")

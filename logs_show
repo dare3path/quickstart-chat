@@ -1,1 +1,5 @@
-spacetime logs --follow quickstart-chat
+#!/usr/bin/bash
+
+set -xe
+spacetime logs --follow quickstart-chat --cert ../../CA/ca.crt
+echo "done"

@@ -9,7 +9,8 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-spacetimedb = { version="1.0.1",  path="/home/user/SOURCE/SpacetimeDB/crates/bindings/" }
+spacetimedb.workspace=true # = { version="1.1.1",  path="/home/user/SOURCE/SpacetimeDB/crates/bindings/" }
 #  path="/home/user/SOURCE/SpacetimeDB/crates/"
 #}
-log = "0.4"
+log.workspace=true # = "0.4"
+

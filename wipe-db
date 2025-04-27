@@ -1,1 +1,6 @@
-spacetime delete quickstart-chat
+#!/usr/bin/bash
+
+set -xe
+autoslocalscripts="autoslocalscripts"
+spacetime delete --server $autoslocalscripts quickstart-chat --cert ../../CA/ca.crt
+echo "done."

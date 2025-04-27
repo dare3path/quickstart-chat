@@ -1,0 +1,34 @@
+[workspace]
+members = ["server", "client"]
+resolver="3"
+
+[profile.dev]
+opt-level = 0
+debug = 1
+debug-assertions = true
+overflow-checks = true
+lto = false
+panic = 'unwind'
+incremental = true
+codegen-units = 256
+rpath = false
+
+[workspace.dependencies]
+spacetimedb = { version = "1.1.1", path = "/home/user/SOURCE/SpacetimeDB/crates/bindings" }
+spacetimedb-sdk = { version = "1.1.1", path = "/home/user/SOURCE/SpacetimeDB/crates/sdk" }
+log = "0.4"
+hex = "0.4"
+ctrlc = { version = "3.4", features = ["termination"] }
+
+# needed here(as it affects all members of workspace) else not all pki-types crate uses (see: cargo tree) will use the feature or be same as the path= ones.
+[patch.crates-io]
+#A version that has zeroize, because 1.12.0 or so, isn't yet released.
+#Patched to have zeroize() method but doesn't zeroize on drop(this isn't enough for our uses!):
+#rustls-pki-types = { git = "https://github.com/rustls/pki-types.git", rev = "b59e08d49911b10c423d25bd9040cfbe5a6042ff" }
+
+#Patched to zeroize on drop(good for us):
+rustls-pki-types = { path = "/home/user/SOURCE/github/modified_forks/pki-types" }
+
+#patched to not obscure connection errors behind ChannelClosed:
+hyper-util = { path ="/home/user/SOURCE/my/channelclosed.reqwest/hyper-util" }
+

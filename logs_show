@@ -2,5 +2,5 @@
 
 autoslocalscripts="autoslocalscripts"
 set -xe
-spacetime logs -s autoslocalscripts --follow quickstart-chat --cert ../../CA/ca.crt
+spacetime logs -s autoslocalscripts --follow quickstart-chat --cert ../spacetimedb-cert-gen/ca.crt
 echo "done"

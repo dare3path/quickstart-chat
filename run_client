@@ -1,3 +1,8 @@
+#!/usr/bin/bash
+
 cd client
 export RUST_BACKTRACE=1
-cargo run
+#not mTLS:
+#cargo run -- --trust-server-cert ../../../my/spacetimedb-cert-gen/ca.crt
+#mTLS:
+cargo run -- --client-cert ../../../my/spacetimedb-cert-gen/client1.crt --client-key ../../../my/spacetimedb-cert-gen/client1.key --trust-server-cert ../../../my/spacetimedb-cert-gen/ca.crt

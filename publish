@@ -8,16 +8,16 @@ autoslocalscripts="autoslocalscripts"
 #^ useless
 #This works first time, the fails due to being already added!
 spacetime server add \
---cert ../../CA/ca.crt \
+--cert ../spacetimedb-cert-gen/ca.crt \
 --url https://127.1.2.3:6543 \
 $autoslocalscripts \
 
 set -e
 
-#spacetime login --server-issued-login https://127.1.2.3:6543 --cert ../../CA/ca.crt
-spacetime login --server-issued-login $autoslocalscripts --cert ../../CA/ca.crt
+#spacetime login --server-issued-login https://127.1.2.3:6543 --cert ../spacetimedb-cert-gen/ca.crt
+spacetime login --server-issued-login $autoslocalscripts --cert ../spacetimedb-cert-gen/ca.crt
 
 spacetime server list
-spacetime publish --yes --server $autoslocalscripts --project-path server quickstart-chat --cert ../../CA/ca.crt
-#spacetime publish --project-path server quickstart-chat --cert ../../CA/ca.crt
+spacetime publish --yes --server $autoslocalscripts --project-path server quickstart-chat --cert ../spacetimedb-cert-gen/ca.crt
+#spacetime publish --project-path server quickstart-chat --cert ../spacetimedb-cert-gen/ca.crt
 echo "all good."

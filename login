@@ -8,6 +8,6 @@ spacetime server add --no-fingerprint -d --url https://127.1.2.3:6543 "$serverni
 spacetime server list
 
 spacetime logout
-#spacetime login --server-issued-login https://127.1.2.3:6543 --cert ../CA/ca.crt
+#spacetime login --server-issued-login https://127.1.2.3:6543 --cert ../spacetimedb-cert-gen/ca.crt
 #^ bugged as: https://github.com/clockworklabs/SpacetimeDB/issues/2512
-spacetime login --server-issued-login "$servernick" --cert ../../CA/ca.crt
+spacetime login --server-issued-login "$servernick" --cert ../spacetimedb-cert-gen/ca.crt

@@ -8,4 +8,4 @@ edition = "2024"
 spacetimedb-sdk.workspace=true # = { version="1.1.1",  path="/home/user/SOURCE/SpacetimeDB/crates/sdk/" }
 hex.workspace = true #"0.4"
 ctrlc.workspace=true #ctrlc = { version="3.4", features = [ "termination" ] }
-
+clap.workspace=true

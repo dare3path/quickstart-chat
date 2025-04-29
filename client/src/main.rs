@@ -1,4 +1,5 @@
 #![allow(clippy::disallowed_macros)]
+#![forbid(unsafe_code)]
 
 mod module_bindings;
 use module_bindings::*;

@@ -1,3 +1,5 @@
+#![forbid(unsafe_code)]
+
 use spacetimedb::{table, reducer, Table, ReducerContext, Identity, Timestamp};
 
 #[table(name = user, public)]

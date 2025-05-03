@@ -2171,6 +2171,7 @@ dependencies = [
  "spacetimedb-sats",
  "thiserror 1.0.69",
  "tokio",
+ "zeroize",
 ]
 
 [[package]]
@@ -2250,6 +2251,7 @@ dependencies = [
  "thiserror 1.0.69",
  "tokio",
  "tokio-tungstenite",
+ "zeroize",
 ]
 
 [[package]]
